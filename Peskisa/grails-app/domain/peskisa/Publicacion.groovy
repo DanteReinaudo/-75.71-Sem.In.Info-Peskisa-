@@ -10,5 +10,8 @@ class Publicacion {
     int nomegustas
     BidDecimal precio
     static constraints = {
+        usuario blank: false, nullable: false
+        producto blank: false, nullable: false
+        comercio blank: false, nullable: false
     }
 }
