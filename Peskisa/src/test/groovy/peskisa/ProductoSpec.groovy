@@ -11,8 +11,36 @@ class ProductoSpec extends Specification implements DomainUnitTest<Producto> {
     def cleanup() {
     }
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+
+    void 'test nombre no puede ser blank'() {
+        when:
+        domain.nombre = ''
+
+        then:
+        !domain.validate(['nombre'])
+    }
+
+    void 'test marca no puede ser blank'() {
+        when:
+        domain.marca = ''
+
+        then:
+        !domain.validate(['marca'])
+    }
+
+    void 'test modelo no puede ser blank'() {
+        when:
+        domain.modelo = ''
+
+        then:
+        !domain.validate(['modelo'])
+    }
+
+    void 'test categoria no puede ser blank'() {
+        when:
+        domain.categoria = ''
+
+        then:
+        !domain.validate(['categoria'])
     }
 }

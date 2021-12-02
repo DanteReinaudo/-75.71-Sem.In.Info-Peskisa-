@@ -8,8 +8,8 @@ class Calificacion {
     Valoracion valoracion
 
     static constraints = {
-        usuario blank: false, nullable: false
-        publicacion blank: false, nullable: false
+        usuario nullable: false
+        publicacion nullable: false
     }
 
     Calificacion(Usuario usuario, Publicacion publicacion, Valoracion valoracion) {
@@ -18,11 +18,22 @@ class Calificacion {
         this.valoracion = valoracion
     }
 
+    boolean equals(object) {
+        if (this.is(object)) return true
+        if (getClass() != object.class) return false
+        if (!super.equals(object)) return false
+
+        Calificacion that = (Calificacion) object
+
+        if (publicacion != that.publicacion) return false
+        if (usuario != that.usuario) return false
+        //if (valoracion != that.valoracion) return false
+
+        return true
+    }
+
     void CambiarValoracion(Valoracion valoracion){
         this.valoracion = Valoracion.valoracion
     }
 
-    void quitarValoracion(){
-        this.valoracion = Valoracion.NULA;
-    }
 }

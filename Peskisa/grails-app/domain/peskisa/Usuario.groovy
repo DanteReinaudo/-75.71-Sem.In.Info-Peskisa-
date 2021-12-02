@@ -11,6 +11,21 @@ class Usuario {
     //date fecha_nacimiento
     Estado estado
 
+    boolean equals(object) {
+        if (this.is(object)) return true
+        if (getClass() != object.class) return false
+        if (!super.equals(object)) return false
+
+        Usuario usuario = (Usuario) object
+        if (contrasenia != usuario.contrasenia) return false
+        if (email != usuario.email) return false
+        if (estado != usuario.estado) return false
+        if (nombre != usuario.nombre) return false
+        if (publicaciones != usuario.publicaciones) return false
+
+        return true
+    }
+
     ArrayList<Publicacion> publicaciones = []
     ArrayList<Publicacion> historial = []
     ArrayList<Publicacion> favoritos = []
@@ -43,24 +58,20 @@ class Usuario {
         favoritos.push(publicacion)
     }
 
-    void valorarPublicacion(Publicacion publicacion, boolean valoracion){
-        Calificacion calificacion = new Calificacion(this, publicacion, valoracion)
-        publicacion.valorar(calificacion,valoracion)
-    }
 
-    Calificacion calificar(Publicacion publicacion, Valoracion valoracion){
+    Calificacion calificarPublicacion(Publicacion publicacion, Valoracion valoracion){
         this.validar()
         Calificacion calificacionPrevia = this.calificaciones.find{ Calificacion calificacion ->
             calificacion.publicacion = publicacion
         }
 
         if (calificacionPrevia != null){
-            calificacionPrevia.cambiarValoracion(valoracion)
+            publicacion.calificar(calificacionPrevia,valoracion)
             return calificacionPrevia
         } else {
             Calificacion calificacion = new Calificacion(this,publicacion,valoracion)
             this.calificaciones  << calificaciones
-            publicacion.reportar(reporte);
+            publicacion.calificar(calificacion,valoracion);
             calificacion
         }
 

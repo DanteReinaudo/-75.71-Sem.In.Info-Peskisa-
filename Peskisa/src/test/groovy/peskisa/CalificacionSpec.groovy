@@ -11,8 +11,24 @@ class CalificacionSpec extends Specification implements DomainUnitTest<Calificac
     def cleanup() {
     }
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void 'test usuario no puede ser NULL'() {
+        when:
+        domain.usuario = null
+
+        then:
+        !domain.validate(['usuario'])
+        domain.errors['usuario'].code == 'nullable'
     }
+
+
+    void 'test publicacion no puede ser NULL'() {
+        when:
+        domain.publicacion = null
+
+        then:
+        !domain.validate(['publicacion'])
+        domain.errors['publicacion'].code == 'nullable'
+    }
+
+
 }

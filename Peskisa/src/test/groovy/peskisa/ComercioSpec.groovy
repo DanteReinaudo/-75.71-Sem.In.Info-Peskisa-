@@ -11,8 +11,12 @@ class ComercioSpec extends Specification implements DomainUnitTest<Comercio> {
     def cleanup() {
     }
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
+    void 'test nombre no puede ser blank'() {
+        when:
+        domain.nombre = ''
+
+        then:
+        !domain.validate(['nombre'])
     }
+
 }
