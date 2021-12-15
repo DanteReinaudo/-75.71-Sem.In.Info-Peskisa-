@@ -5,7 +5,7 @@ class Producto {
     String modelo
     String nombre
     String categoria
-    int precioMercado
+
     static constraints = {
         marca blank: false, nullable: false
         modelo blank: false, nullable: false

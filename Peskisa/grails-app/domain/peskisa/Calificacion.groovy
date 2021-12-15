@@ -1,20 +1,19 @@
 package peskisa
 
-//enum Valoracion {POSITIVA,NEGATIVA,NULA}
-
 class Calificacion {
+    enum Valoracion {POSITIVA,NEGATIVA,NULA}
     Usuario usuario
-    Publicacion publicacion
+    Calificalble calificado
     Valoracion valoracion
 
     static constraints = {
         usuario nullable: false
-        publicacion nullable: false
+        calificado nullable: false
     }
 
-    Calificacion(Usuario usuario, Publicacion publicacion, Valoracion valoracion) {
+    Calificacion(Usuario usuario, Calificable calificado, Valoracion valoracion) {
         this.usuario = usuario
-        this.publicacion = publicacion
+        this.calificado = calificado
         this.valoracion = valoracion
     }
 
@@ -25,15 +24,14 @@ class Calificacion {
 
         Calificacion that = (Calificacion) object
 
-        if (publicacion != that.publicacion) return false
+        if (calificado != that.calificado) return false
         if (usuario != that.usuario) return false
-        //if (valoracion != that.valoracion) return false
 
         return true
     }
 
-    void CambiarValoracion(Valoracion valoracion){
-        this.valoracion = Valoracion.valoracion
+    void cambiarValoracion(Valoracion valoracion){
+        this.valoracion = valoracion
     }
 
 }

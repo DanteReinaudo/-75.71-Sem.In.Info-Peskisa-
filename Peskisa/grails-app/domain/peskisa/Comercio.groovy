@@ -2,10 +2,10 @@ package peskisa
 
 class Comercio {
     String nombre;
-    //ubicacion Ubicacion;
+    Ubicacion ubicacion;
     static constraints = {
         nombre blank: false, nullable: false
-        //ubicacion blank: false, nullable: false
+        ubicacion nullable: false
     }
 
     boolean equals(object) {
@@ -19,7 +19,8 @@ class Comercio {
         return true
     }
 
-    Comercio(String nombre){
+    Comercio(String nombre,Ubicacion ubicacion){
         this.nombre = nombre
+        this.ubicacion = ubicacion
     }
 }

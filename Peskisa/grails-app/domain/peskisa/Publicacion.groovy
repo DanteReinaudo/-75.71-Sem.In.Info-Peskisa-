@@ -1,23 +1,27 @@
 package peskisa
-//import java.time.*
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.util.*
 
-//enum Estado {ACTIVO ,ELIMINADO}
 
-class Publicacion {
+class Publicacion implements Denunciable,Calificable {
+
+    static int MAX_DENUNCIAS = 3
+    static int MAX_COMENTARIOS_USUARIO = 5
+    enum Estado {ACTIVO ,ELIMINADO,DENUNCIADO}
     Usuario usuario
     Producto producto
     Comercio comercio
     LocalDateTime fecha
+    static Suplier<LocalDateTime> ahora = {LocalDateTime.now()}
     BigDecimal precio
     Estado estado
 
-    ArrayList<Calificacion> calificaciones
+    List<Calificacion> calificaciones = []
     int megustas
     int nomegustas
 
-    Set<Reporte> reportes = []
+    List<Denuncias> denunciasRecibidas = []
+    List<Comentario> comentarios = []
 
 
     static constraints = {
@@ -40,13 +44,8 @@ class Publicacion {
         Publicacion that = (Publicacion) object
 
         if (comercio != that.comercio) return false
-        if (estado != that.estado) return false
-        if (fecha != that.fecha) return false
-        if (megustas != that.megustas) return false
-        if (nomegustas != that.nomegustas) return false
         if (precio != that.precio) return false
         if (producto != that.producto) return false
-        if (reportes != that.reportes) return false
         if (usuario != that.usuario) return false
 
         return true
@@ -57,27 +56,19 @@ class Publicacion {
         this.usuario = usuario
         this.producto = producto
         this.comercio = comercio
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")
-        this.fecha = dtf.format(LocalDateTime.now())
+        this.fecha = ahora.get()
         this.precio = new BigDecimal(precio)
         this.estado = Estado.ACTIVO
         this.megustas = 0
         this.nomegustas = 0
     }
 
-    void reportar(Reporte reporte){
-        this.validar()
-        this.reportes  << reportes
-        if (reportes.length > 3){
-            this.estado = Estado.ELIMINADO
-        }
-    }
 
     void calificar(Calificacion calificacion,Valoracion valoracion){
         this.validar()
 
         Calificacion calificacionPrevia = this.calificaciones.find{ Calificacion calif ->
-            calif = calificacion
+            calif == calificacion
         }
 
         if (calificacionPrevia != null){
@@ -95,13 +86,39 @@ class Publicacion {
             calificacionPrevia.cambiarValoracion(valoracion)
 
         } else {
-            this.calificaciones  << calificacion
+            this.calificaciones.add(calificacion)
             if (calificacion.valoracion == Valoracion.POSITIVA){
                 this.megustas++
             } else if (calificacion.valoracion == Valoracion.NEGATIVA) {
                 this.nomegustas++
             }
         }
+    }
+
+    void recibirDenuncia(Denuncia denuncia){
+        this.validar()
+        this.denunciasRecibidas.add(denuncia)
+        if(this.denunciasRecibidas.length >= MAX_DENUNCIAS){
+            this.estado = Estado.DENUNCIADO
+        }
+    }
+
+    void eliminarDenunciaRecibida(Denuncia denuncia){
+        this.validar()
+        if (denuncia.denunciado != this) throw new IllegalStateException("La denuncia =${denuncia} no corresponde a la publicacion =${this}")
+        this.denunciasRecibidas.remove(denuncia)
+        if(this.denunciasRecibidas.length < MAX_DENUNCIAS) {
+            this.estado = Estado.ACTIVO
+        }
+    }
+
+    void comentar(Comentario comentario){
+        this.validar()
+        List<Comentario> comentariosPrevios = this.comentarios.findAll{ Comentario c ->
+            c.usuario == comentario.usuario
+        }
+        if (comentariosPrevios.length > MAX_COMENTARIOS_USUARIO) throw new IllegalStateException("El usuario=${comentario.usuario} ya realizo demasiados comentarios en =${this}")
+        this.comentarios.add(comentario)
     }
 
 }
